@@ -1,0 +1,112 @@
+#include <LiquidCrystal.h>
+#include <LiquidCrystal_I2C_AvrI2C.h>
+
+LiquidCrystal_I2C_AvrI2C lcd(0x27,16,2); //lcd isminde bir 16x2 ekran nesnesi oluşturduk
+
+int buzzer=1; // Buzzer
+int YesilLed1 = 2;
+int YesilLed2 = 3;
+int YesilLed3 = 4;
+int SariLed1 = 5;
+int SariLed2 = 6;
+int SariLed3 = 7;
+int KirmiziLed1 = 8;
+int KirmiziLed2 = 9;
+int KirmiziLed3 = 10;
+int trigger_pin = 11;
+int echo_pin = 12;
+int buzzer = 13;
+long zaman;
+long mesafe;
+ 
+void setup() {
+    // BUZZER
+    pinMode(buzzer, OUTPUT); 
+
+    // TRIGGER
+    pinMode(trigger_pin, OUTPUT);
+    pinMode(echo_pin, INPUT);
+
+    // LCD SETUP
+    lcd.begin(); // lcd'yi başlatıyoruz
+    lcd.backlight(); // lcd arka ışığını açıyoruz.
+    lcd.setCursor(0, 0); // imleci 1.satır ilk karaktere getiriyoruz.
+    lcd.print("MESAFE : "); // İlk satıra yazalım
+    lcd.setCursor(10, 0);     
+    lcd.print(mesafe + ' cm'); // İlk satıra yazalım  
+
+    // LEDLER
+    pinMode(YesilLed1, OUTPUT);
+    pinMode(YesilLed2, OUTPUT);
+    pinMode(YesilLed3, OUTPUT);
+    pinMode(SariLed1, OUTPUT);
+    pinMode(SariLed2, OUTPUT);
+    pinMode(SariLed3, OUTPUT);
+    pinMode(KirmiziLed1, OUTPUT);
+    pinMode(KirmiziLed2, OUTPUT);
+    pinMode(KirmiziLed3, OUTPUT);
+}
+ 
+void loop() {
+    digitalWrite(trigPin, LOW); 
+    delayMicroseconds(5);
+    digitalWrite(trigPin, HIGH); 
+    delayMicroseconds(10);
+    digitalWrite(trigPin, LOW);
+
+    zaman = pulseIn(echoPin, HIGH);
+    mesafe = (zaman / 58.2); 
+   
+    if (mesafe > 0 && mesafe < 10) {
+        digitalWrite(KirmiziLed1, HIGH);
+        digitalWrite(KirmiziLed2, HIGH);
+        digitalWrite(KirmiziLed3, HIGH);
+
+        digitalWrite(SariLed1, LOW);
+        digitalWrite(SariLed2, LOW);
+        digitalWrite(SariLed3, LOW);
+
+        digitalWrite(YesilLed1, LOW);
+        digitalWrite(YesilLed2, LOW);
+        digitalWrite(YesilLed3, LOW);
+
+        digitalWrite(buzzer, HIGH); //Buzzer'a güç göndererek ses çıkarmasını sağladık.
+        delay(100);                 
+        digitalWrite(buzzer, LOW); //Buzzerın gücünü keserek susmasını sağladık sağladık.
+        delay(100);    
+    } else if (mesafe > 10 && mesafe < 20) {
+        digitalWrite(KirmiziLed1, LOW);
+        digitalWrite(KirmiziLed2, LOW);
+        digitalWrite(KirmiziLed3, LOW);
+
+        digitalWrite(SariLed1, HIGH);
+        digitalWrite(SariLed2, HIGH);
+        digitalWrite(SariLed3, HIGH);
+
+        digitalWrite(YesilLed1, LOW);
+        digitalWrite(YesilLed2, LOW);
+        digitalWrite(YesilLed3, LOW);
+
+        digitalWrite(buzzer, HIGH); //Buzzer'a güç göndererek ses çıkarmasını sağladık.
+        delay(500);                 
+        digitalWrite(buzzer, LOW); //Buzzerın gücünü keserek susmasını sağladık sağladık.
+        delay(500); 
+    } else if (mesafe > 20){
+        digitalWrite(KirmiziLed1, LOW);
+        digitalWrite(KirmiziLed2, LOW);
+        digitalWrite(KirmiziLed3, LOW);
+
+        digitalWrite(SariLed1, LOW);
+        digitalWrite(SariLed2, LOW);
+        digitalWrite(SariLed3, LOW);
+
+        digitalWrite(YesilLed1, HIGH);
+        digitalWrite(YesilLed2, HIGH);
+        digitalWrite(YesilLed3, HIGH);
+
+        digitalWrite(buzzer, HIGH); //Buzzer'a güç göndererek ses çıkarmasını sağladık.
+        delay(1000);                 
+        digitalWrite(buzzer, LOW); //Buzzerın gücünü keserek susmasını sağladık sağladık.
+        delay(1000); 
+    }
+}
